@@ -18,6 +18,7 @@ class User(Base):
     degree: Mapped[str] = mapped_column(String(50))
     level: Mapped[str] = mapped_column(String(15))
     year: Mapped[int] = mapped_column(Integer)
+    password_hash: Mapped[str] = mapped_column(String(200), nullable=False)
 
     posts: Mapped[list[Question]] = relationship(back_populates="author", cascade="all, delete-orphan")
     replies: Mapped[list[Reply]] = relationship(back_populates="author", cascade="all, delete-orphan")
