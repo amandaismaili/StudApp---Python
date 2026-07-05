@@ -17,6 +17,7 @@ from database import get_db
 
 router = APIRouter()
 
+
 @router.post("/register")
 async def register(user: UserCreate, db:Annotated[AsyncSession, Depends(get_db)]):
     result = await db.execute(select(models.User).where(models.User.username) == user.username)
@@ -85,3 +86,85 @@ async def login_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 @router.get("/me", response_model=UserPrivate)
 async def get_current_user(current_user: currentUser):
     return current_user
+
+
+@router.delete("/delete/", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_acc(user_id: int, current_user: currentUser, db:Annotated[AsyncSession, Depends(get_db)]):
+    if user_id != current_user.id:
+        raise HTTPException(
+            status_code= status.HTTP_403_FORBIDDEN,
+            detail = "Not authorized to delete this account."
+        )
+    
+    result = await db.execute(select(models.User).where(models.User.id == user_id)).options(selectinload(models.User.posts))
+    currUser = result.scalars().first()
+    if not currUser:
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND,
+            detail = "User not found"
+        )
+    
+    await db.delete(currUser)
+    await db.commit()
+    return None
+
+
+@router.put("/search/{user_id}", response_model=UserPrivate)
+async def update_account(user_id: int, current_user: currentUser, user_update: UserUpdate, db: Annotated[AsyncSession, Depends(get_db)]):
+    if user_id != current_user.id:
+        raise HTTPException(
+            status_code= status.HTTP_403_FORBIDDEN,
+            detail = "Not authorized to update this account."
+        )
+    
+    res = db.execute(select(models.User).where(models.User.id == user_id))
+    result = res.scalars().first()
+
+    if not result:
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND,
+            detail = "User not found."
+        )
+    
+    if user_update.username is not None and user_update.username != result.username:
+        res = await db.execute(select(models.User).where(models.User.username == user_update.username))
+        existing_user = res.scalars().first()
+
+        if existing_user:
+            raise HTTPException(
+                status_code= status.HTTP_400_BAD_REQUEST,
+                detail = "Username already exists."
+            )
+        
+
+    if user_update.email is not None and user_update.email != result.email:
+        res = await db.execute(select(models.User).where(models.User.email == user_update.email))
+        existing_email = res.scalars().first()
+
+        if existing_email:
+            raise HTTPException(
+                status_code= status.HTTP_400_BAD_REQUEST,
+                detail = "Email has already been used."
+            )
+        
+    if user_update.username is not None:
+        result.username = user_update.username
+    if user_update.email is not None:
+        result.email = user_update.email
+    if user_update.name is not None:
+        result.name = user_update.name
+    if user_update.surname is not None:
+        result.surname = user_update.surname
+    if user_update.university is not None:
+        result.university = user_update.university
+    if user_update.degree is not None:
+        result.degree = user_update.degree
+    if user_update.year is not None:
+        result.year = user_update.year
+    if user_update.level is not None:
+        result.level = user_update.level
+
+    await db.commit()
+    await db.refresh(result)
+    
+    return result
