@@ -65,7 +65,7 @@ async def delete_question(question_id: int, current_user: currentUser, db: Annot
     result = res.scalars().first()
 
     if not result:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Question not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Question not found.")
     
     if result.user_id != current_user.id:
         raise HTTPException(status_code= status.HTTP_403_FORBIDDEN, detail = "Cannot delete this question.")
@@ -74,3 +74,41 @@ async def delete_question(question_id: int, current_user: currentUser, db: Annot
     await db.commit()
 
     return None
+
+
+@router.delete("/delete/{reply_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_reply(reply_id: int, current_user: currentUser, db: Annotated[AsyncSession, Depends(get_db)]):
+    res = await db.execute(select(models.Reply).where(models.Reply.id == reply_id))
+    result = res.scalars().first()
+
+    if not result:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Reply not found.")
+    
+    if result.user_id != current_user.id:
+        raise HTTPException(status_code= status.HTTP_403_FORBIDDEN, detail = "Cannot delete this reply.")
+    
+    await db.delete(result)
+    await db.commit()
+
+    return None
+
+
+@router.patch("/update/{question_id}", response_model=QuestionResponse)
+async def update_question(question_id: int, current_user: currentUser, ques_data: QuestionUpdate, db: Annotated[AsyncSession, Depends(get_db)]):
+    res = await db.execute(select(models.Question).where(models.Question.id == question_id).options(selectinload(models.Question.author)))
+    result = res.scalars().first()
+    
+    if not result:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Question not found.")
+    
+    if result.user_id != current_user.id:
+        raise HTTPException(status_code= status.HTTP_403_FORBIDDEN, detail = "Cannot edit this question.")
+    
+    update_data = ques_data.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(result, field, value)
+
+    await db.commit()
+    await db.refresh(result, attribute_names=["author"])
+
+    return result
