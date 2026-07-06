@@ -112,3 +112,24 @@ async def update_question(question_id: int, current_user: currentUser, ques_data
     await db.refresh(result, attribute_names=["author"])
 
     return result
+
+
+@router.patch("/update/{reply_id}", response_model=ReplyResponse)
+async def update_question(reply_id: int, current_user: currentUser, reply_data: ReplyUpdate, db: Annotated[AsyncSession, Depends(get_db)]):
+    res = await db.execute(select(models.Question).where(models.Question.id == reply_id).options(selectinload(models.Question.author)))
+    result = res.scalars().first()
+    
+    if not result:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Reply not found.")
+    
+    if result.user_id != current_user.id:
+        raise HTTPException(status_code= status.HTTP_403_FORBIDDEN, detail = "Cannot edit this reply.")
+    
+    update_data = reply_data.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(result, field, value)
+
+    await db.commit()
+    await db.refresh(result, attribute_names=["author"])
+
+    return result
