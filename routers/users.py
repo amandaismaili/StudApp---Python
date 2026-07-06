@@ -3,7 +3,7 @@ from typing import Annotated
 import models
 from schemas import UserBase, UserCreate, UserPrivate, UserPublic, UserUpdate, Token
 
-from sqlalchemy import select, func, or_
+from sqlalchemy import select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
