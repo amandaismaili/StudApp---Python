@@ -92,4 +92,4 @@ async def get_current_user(
     
     return user
 
-currentuser = Annotated[models.User, Depends(get_current_user)]
+currentUser = Annotated[models.User, Depends(get_current_user)]
