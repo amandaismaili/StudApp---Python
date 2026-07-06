@@ -47,3 +47,13 @@ async def reply_to_ques(question_id: int, reply_body: ReplyCreate, current_user:
     await db.refresh(reply, attribute_names=["author"])
     return reply
 
+
+@router.get("/search/{question_id}", response_model=QuestionResponse)
+async def search(question_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
+    result = await db.execute(select(models.Question).where(models.Question.id == question_id).options(selectinload(models.Question.author)))
+    question = result.scalars().first()
+
+    if not question:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Question not found")
+    
+    return question
