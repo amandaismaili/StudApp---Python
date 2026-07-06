@@ -57,3 +57,20 @@ async def search(question_id: int, db: Annotated[AsyncSession, Depends(get_db)])
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Question not found")
     
     return question
+
+
+@router.delete("/delete/{question_id}/", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_question(question_id: int, current_user: currentUser, db: Annotated[AsyncSession, Depends(get_db)]):
+    res = await db.execute(select(models.Question).where(models.Question.id == question_id))
+    result = res.scalars().first()
+
+    if not result:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Question not found")
+    
+    if result.user_id != current_user.id:
+        raise HTTPException(status_code= status.HTTP_403_FORBIDDEN, detail = "Cannot delete this question.")
+    
+    await db.delete(result)
+    await db.commit()
+
+    return None
