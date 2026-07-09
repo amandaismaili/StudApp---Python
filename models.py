@@ -46,6 +46,7 @@ class Reply(Base):
     user_id : Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
     question_id: Mapped[int] = mapped_column(ForeignKey("questions.id"), nullable=False, index=True)
     date_posted: Mapped[datetime] = mapped_column(DateTime(timezone=True), default= lambda: datetime.now(UTC))
-
+    likes: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    
     author: Mapped[User] = relationship(back_populates="replies")
     question: Mapped[Question] = relationship(back_populates="replies")
