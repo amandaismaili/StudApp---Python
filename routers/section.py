@@ -59,7 +59,7 @@ async def search(question_id: int, db: Annotated[AsyncSession, Depends(get_db)])
     return question
 
 
-@router.delete("/delete/{question_id}/", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/delete/question/{question_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_question(question_id: int, current_user: currentUser, db: Annotated[AsyncSession, Depends(get_db)]):
     res = await db.execute(select(models.Question).where(models.Question.id == question_id))
     result = res.scalars().first()
@@ -76,7 +76,7 @@ async def delete_question(question_id: int, current_user: currentUser, db: Annot
     return None
 
 
-@router.delete("/delete/{reply_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/delete/reply/{reply_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_reply(reply_id: int, current_user: currentUser, db: Annotated[AsyncSession, Depends(get_db)]):
     res = await db.execute(select(models.Reply).where(models.Reply.id == reply_id))
     result = res.scalars().first()
@@ -115,8 +115,8 @@ async def update_question(question_id: int, current_user: currentUser, ques_data
 
 
 @router.patch("/update/{reply_id}", response_model=ReplyResponse)
-async def update_question(reply_id: int, current_user: currentUser, reply_data: ReplyUpdate, db: Annotated[AsyncSession, Depends(get_db)]):
-    res = await db.execute(select(models.Question).where(models.Question.id == reply_id).options(selectinload(models.Question.author)))
+async def update_reply(reply_id: int, current_user: currentUser, reply_data: ReplyUpdate, db: Annotated[AsyncSession, Depends(get_db)]):
+    res = await db.execute(select(models.Reply).where(models.Reply.id == reply_id).options(selectinload(models.Reply.author)))
     result = res.scalars().first()
     
     if not result:
