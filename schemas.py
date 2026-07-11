@@ -48,7 +48,7 @@ class UserUpdate(UserBase):
 
 
 #schemas for questions (considered posts)
-class QuestionBase(UserBase):
+class QuestionBase(BaseModel):
     title: str = Field(min_length=10, max_length=100)
     text: str
 
@@ -76,11 +76,12 @@ class ReplyCreate(BaseModel):
 
 
 class ReplyResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     text: str = Field(default=None, min_length=1)
     id: int
     user_id: int
-    post_id: int
-    date_published: datetime
+    question_id: int
+    date_posted: datetime
     author: UserPublic
 
 
