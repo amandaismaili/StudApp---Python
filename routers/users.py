@@ -20,7 +20,7 @@ router = APIRouter()
 
 @router.post("/register")
 async def register(user: UserCreate, db:Annotated[AsyncSession, Depends(get_db)]):
-    result = await db.execute(select(models.User).where(models.User.username) == user.username)
+    result = await db.execute(select(models.User).where(models.User.username == user.username))
     existing_user = result.scalars().first()
 
     if existing_user:
@@ -29,7 +29,7 @@ async def register(user: UserCreate, db:Annotated[AsyncSession, Depends(get_db)]
             detail = "Username already exists."
         )
     
-    result = await db.execute(select(models.User).where(models.User.email) == user.email)
+    result = await db.execute(select(models.User).where(models.User.email == user.email))
     existing_email = result.scalars().first()
 
     if existing_email:
@@ -52,7 +52,7 @@ async def register(user: UserCreate, db:Annotated[AsyncSession, Depends(get_db)]
 
     db.add(new_user)
     await db.commit()
-    await db.refresh()
+    await db.refresh(new_user)
     return new_user
 
 
@@ -67,7 +67,7 @@ async def login_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
     )
 
     user = res.scalars().first()
-    if not user or not verify_pw(form_data.pw, user.password_hash):
+    if not user or not verify_pw(form_data.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -96,7 +96,7 @@ async def delete_acc(user_id: int, current_user: currentUser, db:Annotated[Async
             detail = "Not authorized to delete this account."
         )
     
-    result = await db.execute(select(models.User).where(models.User.id == user_id)).options(selectinload(models.User.posts))
+    result = await db.execute(select(models.User).where(models.User.id == user_id).options(selectinload(models.User.posts)))
     currUser = result.scalars().first()
     if not currUser:
         raise HTTPException(
@@ -117,7 +117,7 @@ async def update_account(user_id: int, current_user: currentUser, user_update: U
             detail = "Not authorized to update this account."
         )
     
-    res = db.execute(select(models.User).where(models.User.id == user_id))
+    res = await db.execute(select(models.User).where(models.User.id == user_id))
     result = res.scalars().first()
 
     if not result:
