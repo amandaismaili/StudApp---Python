@@ -1,3 +1,4 @@
 .env
-# cd "C:\Users\User\OneDrive\Desktop\studapp"
 __pycache__/
+# cd "C:\Users\User\Projects\studapp"
+# uv run uvicorn main:app --reload
