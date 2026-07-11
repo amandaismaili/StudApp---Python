@@ -1,4 +1,11 @@
 .env
 __pycache__/
+*.pyc
+fastapi-env/
+test.db
+users.db
+*.db
+.pytest_cache/
+
 # cd "C:\Users\User\Projects\studapp"
 # uv run uvicorn main:app --reload
