@@ -34,8 +34,8 @@ class Question(Base):
     date_posted: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
     likes: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
 
-    author: Mapped[User] = relationship(back_populates="posts")
-    replies: Mapped[list[Reply]] = relationship(back_populates="question")
+    author: Mapped[User] = relationship(back_populates="posts", cascade="all, delete-orphan")
+    replies: Mapped[list[Reply]] = relationship(back_populates="question", cascade="all, delete-orphan")
 
 
 class Reply(Base):
@@ -48,5 +48,5 @@ class Reply(Base):
     date_posted: Mapped[datetime] = mapped_column(DateTime(timezone=True), default= lambda: datetime.now(UTC))
     likes: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     
-    author: Mapped[User] = relationship(back_populates="replies")
-    question: Mapped[Question] = relationship(back_populates="replies")
+    author: Mapped[User] = relationship(back_populates="replies", cascade="all, delete-orphan")
+    question: Mapped[Question] = relationship(back_populates="replies", cascade="all, delete-orphan")
