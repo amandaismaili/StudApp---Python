@@ -13,7 +13,7 @@ from database import get_db
 
 password_hash = PasswordHash.recommended()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl = "account/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl = "account/user")
 
 
 def hash_pw(passw: str) -> str:
@@ -82,7 +82,7 @@ async def get_current_user(
         select(models.User).where(models.User.id == user_id_int)
     )
 
-    user = result.scalar().first()
+    user = result.scalars().first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
