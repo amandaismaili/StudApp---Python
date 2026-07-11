@@ -13,7 +13,7 @@ from database import get_db
 
 password_hash = PasswordHash.recommended()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl = "account/user")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl = "user/login")
 
 
 def hash_pw(passw: str) -> str:
