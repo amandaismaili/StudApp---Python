@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status, Depends, APIRouter
 from typing import Annotated
 import models
-from schemas import UserBase, UserCreate, UserPrivate, UserPublic, UserUpdate, Token
+from schemas import UserCreate, UserPrivate, UserUpdate, Token
 
 from sqlalchemy import select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
