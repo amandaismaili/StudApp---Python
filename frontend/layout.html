@@ -3,7 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudApp</title>
+    {% if title %}
+        <title>StudApp - {{title}}</title>
+    {% else %}
+        <title>StudApp</title>
+    {% endif %}
+
+    <meta name="description" content = "Student App">
+    <meta name = "author" content = "Amanda Ismaili">
+
+    <meta property="og:title" content = "StudApp">
+    <meta property="og:type" content = "website">
+    <meta property = "og:image" content ="">
+    <meta property="og:url" content = "">
+
+    
 </head>
 <!-- Not finished nor a final version -->
 <body>
