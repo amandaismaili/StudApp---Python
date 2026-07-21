@@ -103,6 +103,22 @@
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
             crossorigin="anonymous"></script>
 
-    
+    <script>
+        const setTheme = (theme) => {
+            if (theme == 'auto') {
+                document.documentElement.setAttribute('data-bs-theme', 
+                    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+                );
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', theme);
+            }
+            localStorage.setItem('theme', theme);
+
+            const themeText = {'light': '🌝', dark: '🌚', auto: '🌗'};
+            document.getElementById('bd-theme-text').textContent = themeText[theme];
+        };
+
+        
+    </script>
 </body>
 </html>
