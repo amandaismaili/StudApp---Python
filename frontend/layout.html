@@ -69,5 +69,25 @@
             </div>
         </nav>
     </header>
+
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {% block content %}
+                {% endblock content %}
+            </div>
+            <aside class="col-md-4">
+                <div class="content-section py-3 px-4 mb-4">
+                    <h3>SideBar</h3>
+                    <p class="text-body-secondary">Make a question. Learn something new.</p>
+                    <ul class="list-group">
+                        <li class="list-group-item">Feed</li>
+                        <li class="list-group-item">Announcements</li>
+                        <li class="list-group-item">Calendars</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </main>
 </body>
 </html>
