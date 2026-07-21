@@ -118,7 +118,11 @@
             document.getElementById('bd-theme-text').textContent = themeText[theme];
         };
 
-        
+        document.querySelectorAll('[data-bs-theme-value]').forEach(
+            button => {button.addEventListener('click', () => setTheme(button.getAttribute('data-bs-theme-value')))}
+        );
+
+        setTheme(localStorage.getItem('theme') || 'auto');
     </script>
 </body>
 </html>
