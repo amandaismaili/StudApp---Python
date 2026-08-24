@@ -25,7 +25,7 @@
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
           crossorigin="anonymous">
 
-    <link rel = "stylesheet" type = "text/css" href="/frontend/main.css">
+    <link rel = "stylesheet" type = "text/css" href="{{ url_for('static', path='main.css') }}">
     
     <meta name="theme-color" content="#6a89a7">
 
@@ -35,14 +35,14 @@
     <header class = "site-header">
         <nav class="navbar navbar-expand-mb bg-steek fixed top" data-bs-theme="dark">
             <div class = "container">
-                <a class="navbar-brand me-4" href="#">StudApp</a>
+                <a class="navbar-brand me-4" href="{{ url_for('home') }}">StudApp</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle"
                         aria-controls = "narvbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                     <span class = "navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <div class="narvbar-nav me-auto">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
                     </div>
                     <div class="navbar-nav">
                         <a class="btn btn-outline-light mb-2 mb-mb-0 mb-mb-2" href="#">Login</a>
