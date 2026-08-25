@@ -24,11 +24,11 @@ def verify_pw(plain_pw: str, hash_pw: str) -> bool:
     return password_hash.verify(plain_pw, hash_pw)
 
 
-def create_token(data: dict, expires: timedelta | None = None) -> str:
+def create_token(data: dict, expires_delta: timedelta | None = None) -> str:
     to_encode = data.copy()
 
-    if expires:
-        expire = datetime.now(UTC) + expires
+    if expires_delta:
+        expire = datetime.now(UTC) + expires_delta
     else:
         expire = datetime.now(UTC) + timedelta(minutes=settings.access_token_expire_minutes)
 
