@@ -59,3 +59,14 @@ async def test_login_wrong_password(client):
 async def test_login_unknown_user(client):
     response = await client.post("/user/login", data={"username": "whoisThat", "password": "passGb#476"})
     assert response.status_code == 401
+
+
+async def test_get_user_authenticated(client, auth_headers):
+    response = await client.get("/user/me", headers=auth_headers)
+    assert response.status_code == 200
+    assert "password_hash" not in response.json()
+
+
+async def test_get_user_no_token(client):
+    response = await client.get("/user/me")
+    assert response.status_code == 401
