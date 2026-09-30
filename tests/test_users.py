@@ -70,3 +70,16 @@ async def test_get_user_authenticated(client, auth_headers):
 async def test_get_user_no_token(client):
     response = await client.get("/user/me")
     assert response.status_code == 401
+
+
+async def test_update_account(client, auth_headers):
+    response = await client.put("/user/search/1", json={"name": "newww"}, headers=auth_headers)
+    assert response.status_code == 200
+    assert response.json()["name"] == "newww"
+
+
+async def test_update_no_token(client):
+    repsonse = await client.put("/user/search/1", json={"name": "newww"})
+    assert repsonse.status == 401
+
+
