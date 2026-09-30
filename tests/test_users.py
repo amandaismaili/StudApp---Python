@@ -80,6 +80,16 @@ async def test_update_account(client, auth_headers):
 
 async def test_update_no_token(client):
     repsonse = await client.put("/user/search/1", json={"name": "newww"})
-    assert repsonse.status == 401
+    assert repsonse.status_code == 401
 
 
+async def test_delete_account(client, auth_headers):
+    response = await client.delete("/user/delete/", params={"user_id": 1}, headers=auth_headers)
+    assert response.status_code in (200, 204)
+    response = await client.post("/user/login", data={"username": "mariamissnf", "password": "myPass@343"})
+    assert response.status_code == 401
+
+
+async def test_delete_no_token(client):
+    response = await client.delete("/user/delete/", params={"user_id": 1})
+    assert response.status_code == 401
