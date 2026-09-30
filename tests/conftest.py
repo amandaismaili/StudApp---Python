@@ -13,6 +13,7 @@ engine = create_async_engine(
 )
 TestingSession = async_sessionmaker(bind=engine)
 
+
 @pytest_asyncio.fixture()
 async def client():
     async with engine.begin() as conn:
@@ -30,3 +31,17 @@ async def client():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
     app.dependency_overrides.clear()
+
+
+@pytest_asyncio.fixture()
+async def auth_header(client):
+    response = await client.post("/user/login", json={"username": "mariamissnf",
+            "email": "mariamissnf@gmail.com", "name": "maria", "surname": "missnf",
+            "university": "sinclarr", "degree": "nursing", "level": "2", "year": "1", "password": "myPass@343"})
+
+
+    response = await client.post("/user/login", json={"username": "mariamissnf", "password": "myPass@343"})
+
+    token = response.json()["access_token"] 
+
+    return {"Authorization": f"Bearer {token}"}
