@@ -39,7 +39,6 @@ async def auth_header(client):
             "email": "mariamissnf@gmail.com", "name": "maria", "surname": "missnf",
             "university": "sinclarr", "degree": "nursing", "level": "2", "year": "1", "password": "myPass@343"})
 
-
     response = await client.post("/user/login", json={"username": "mariamissnf", "password": "myPass@343"})
 
     token = response.json()["access_token"] 
