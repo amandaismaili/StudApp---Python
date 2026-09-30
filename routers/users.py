@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status, Depends, APIRouter
 from typing import Annotated
 import models
-from schemas import UserCreate, UserPrivate, UserUpdate, Token
+from schemas import UserCreate, UserPublic, UserPrivate, UserUpdate, Token
 
 from sqlalchemy import select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,7 +18,7 @@ from database import get_db
 router = APIRouter()
 
 
-@router.post("/register")
+@router.post("/register", response_model=UserPublic)
 async def register(user: UserCreate, db:Annotated[AsyncSession, Depends(get_db)]):
     result = await db.execute(select(models.User).where(models.User.username == user.username))
     existing_user = result.scalars().first()

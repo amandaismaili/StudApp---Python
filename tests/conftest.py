@@ -1,26 +1,32 @@
-import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+import pytest_asyncio
+from httpx import AsyncClient, ASGITransport
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from main import app
 from database import Base, get_db
 
-engine = create_engine(
-    "sqlite://",
+engine = create_async_engine(
+    "sqlite+aiosqlite://",
     connect_args={"check_same_thread": False},
     poolclass=StaticPool
 )
-TestingSession = sessionmaker(bind=engine)
+TestingSession = async_sessionmaker(bind=engine)
 
-@pytest.fixture()
-def client():
-    Base.metadata.create_all(engine)
-    def override_get_db():
-        with TestingSession() as session:
+@pytest_asyncio.fixture()
+async def client():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+    async def override_get_db():
+        async with TestingSession() as session:
             yield session
+
     app.dependency_overrides[get_db] = override_get_db
-    yield TestClient(app)
-    Base.metadata.drop_all(engine)
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
+        yield c
+
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
     app.dependency_overrides.clear()

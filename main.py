@@ -36,4 +36,4 @@ async def home(request: Request, db: Annotated[AsyncSession, Depends(get_db)]):
         )
     )
     questions = result.scalars().all()
-    return templates.TemplateResponse("index.html", {"request": request, "posts": questions})
+    return templates.TemplateResponse(request, "index.html", {"posts": questions})
