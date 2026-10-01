@@ -42,3 +42,37 @@ async def test_search_nonexistent_question(client):
     response = await client.get("/section/search/6959")
 
     assert response.status_code == 404
+
+
+async def test_delete_question(client, auth_headers):
+    ques_response = await client.post("/section/questions", json={"title": "y i have oo", "text": "rjfcurivrf87uhnvdc"}, headers=auth_headers)
+    ques_id = ques_response.json()["id"]
+
+    response = await client.delete(f"/section/delete/question/{ques_id}", headers=auth_headers)
+    assert response.status_code == 204
+
+    search_response = await client.get(f"/section/search/{ques_id}")
+    assert search_response.status_code == 404
+
+
+async def test_delete_nonex_question(client):
+    response = await client.delete("/section/delete/question/7777")
+    assert response.status_code == 401
+
+
+async def test_delete_someones_ques(client, auth_headers):
+    ques_response = await client.post("/section/questions", json={"title": "y i have oo", "text": "rjfcurivrf87uhnvdc"}, headers=auth_headers)
+    ques_id = ques_response.json()["id"]
+    
+    await client.post("/user/register", json={"username": "gabrielahwfh",
+                "email": "gabrielajsjs@gmail.com", "name": "gabi", "surname": "jsjs",
+                "university": "sinclarr", "degree": "nursing", "level": "2", "year": "1", "password": "myPass@6767"})
+    login_response = await client.post(
+        "/user/login",
+        data={"username": "gabrielahwfh", "password": "myPass@6767"}
+    )
+    gabi_token = login_response.json()["access_token"]
+    gabi_headers = {"Authorization": f"Bearer {gabi_token}"}
+    
+    response = await client.delete(f"/section/delete/question/{ques_id}", headers=gabi_headers)
+    assert response.status_code == 403
