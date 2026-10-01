@@ -21,3 +21,10 @@ async def test_replying(client, auth_headers):
     assert response.status_code == 201
     assert response.json()["text"] == "so idk but hey uoo yo"
     assert response.json()["author"]["username"] == "mariamissnf"
+
+
+async def test_reply_to_nonexistent_question(client, auth_headers):
+    response = await client.post("/section/99999/reply", json={"text": "hi"}, headers=auth_headers)
+    assert response.status_code == 404
+
+
