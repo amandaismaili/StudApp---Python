@@ -28,3 +28,17 @@ async def test_reply_to_nonexistent_question(client, auth_headers):
     assert response.status_code == 404
 
 
+async def test_search_question(client, auth_headers):
+    ques_response = await client.post("/section/questions", json={"title": "y i have oo", "text": "rjfcurivrf87uhnvdc"}, headers=auth_headers)
+    ques_id = ques_response.json()["id"]
+
+    response = await client.get(f"/section/search/{ques_id}")
+
+    assert response.status_code == 200
+    assert response.json()["author"]["username"] == "mariamissnf"
+
+
+async def test_search_nonexistent_question(client):
+    response = await client.get("/section/search/6959")
+
+    assert response.status_code == 404

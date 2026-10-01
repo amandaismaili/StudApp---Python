@@ -36,6 +36,11 @@ async def make_question(ques: QuestionCreate, current_user: currentUser, db: Ann
 
 @router.post("/{question_id}/reply", response_model= ReplyResponse, status_code= status.HTTP_201_CREATED)
 async def reply_to_ques(question_id: int, reply_body: ReplyCreate, current_user: currentUser, db: Annotated[AsyncSession, Depends(get_db)]):
+    result = await db.execute(select(models.Question).where(models.Question.id == question_id))
+    question = result.scalars().first()
+    if not question:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
+    
     reply = models.Reply(
         user_id = current_user.id,
         text = reply_body.text,
