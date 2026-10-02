@@ -48,7 +48,7 @@ async def reply_to_ques(question_id: int, reply_body: ReplyCreate, current_user:
     )
 
     db.add(reply)
-    await db.commit()
+    await db.commit()  
     await db.refresh(reply, attribute_names=["author"])
     return reply
 
