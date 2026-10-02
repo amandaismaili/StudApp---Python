@@ -98,7 +98,7 @@ async def delete_reply(reply_id: int, current_user: currentUser, db: Annotated[A
     return None
 
 
-@router.patch("/update/{question_id}", response_model=QuestionResponse)
+@router.patch("/update/question/{question_id}", response_model=QuestionResponse)
 async def update_question(question_id: int, current_user: currentUser, ques_data: QuestionUpdate, db: Annotated[AsyncSession, Depends(get_db)]):
     res = await db.execute(select(models.Question).where(models.Question.id == question_id).options(selectinload(models.Question.author)))
     result = res.scalars().first()
@@ -119,7 +119,7 @@ async def update_question(question_id: int, current_user: currentUser, ques_data
     return result
 
 
-@router.patch("/update/{reply_id}", response_model=ReplyResponse)
+@router.patch("/update/reply/{reply_id}", response_model=ReplyResponse)
 async def update_reply(reply_id: int, current_user: currentUser, reply_data: ReplyUpdate, db: Annotated[AsyncSession, Depends(get_db)]):
     res = await db.execute(select(models.Reply).where(models.Reply.id == reply_id).options(selectinload(models.Reply.author)))
     result = res.scalars().first()
