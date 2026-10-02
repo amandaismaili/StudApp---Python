@@ -119,14 +119,14 @@ async def test_update_question(client, auth_headers):
     ques_response = await client.post("/section/questions", json={"title": "y i have oo", "text": "rjfcurivrf87uhnvdc"}, headers=auth_headers)
     ques_id = ques_response.json()["id"]
 
-    response = await client.patch(f"/section/update/{ques_id}", headers=auth_headers, json={"text": "haleluyah hdhdhdhhshdh"})
+    response = await client.patch(f"/section/update/question/{ques_id}", headers=auth_headers, json={"text": "haleluyah hdhdhdhhshdh"})
 
     assert response.status_code == 200
     assert response.json()["text"] == "haleluyah hdhdhdhhshdh"
 
 
 async def test_update_question_no_token(client):
-    response = await client.patch("/section/update/9595", json={"text": "haleluyah hdhdhdhhshdh"})
+    response = await client.patch("/section/update/question/9595", json={"text": "haleluyah hdhdhdhhshdh"})
     assert response.status_code == 401
 
 
@@ -145,12 +145,12 @@ async def test_update_someones_question(client, auth_headers):
     gabi_token = login_response.json()["access_token"]
     gabi_headers = {"Authorization": f"Bearer {gabi_token}"}
     
-    response = await client.patch(f"/section/update/{ques_id}", headers=gabi_headers, json={"text": "haleluyah hdhdhdhhshdh"})
+    response = await client.patch(f"/section/update/question/{ques_id}", headers=gabi_headers, json={"text": "haleluyah hdhdhdhhshdh"})
     assert response.status_code == 403
 
 
 async def test_update_nonex_question(client, auth_headers):
-    response = await client.patch(f"/section/update/6666", headers=auth_headers, json={"text": "haleluyah hdhdhdhhshdh"})
+    response = await client.patch(f"/section/update/question/6666", headers=auth_headers, json={"text": "haleluyah hdhdhdhhshdh"})
     assert response.status_code == 404
 
 
@@ -161,18 +161,18 @@ async def test_update_reply(client, auth_headers):
     reply_response = await client.post(f"/section/{ques_id}/reply", json={"text": "so idk but hey uoo yo"}, headers=auth_headers)
     reply_id = reply_response.json()["id"]
         
-    response = await client.patch(f"/section/update/{reply_id}", headers=auth_headers, json={"text": "sooooo idk"})
+    response = await client.patch(f"/section/update/reply/{reply_id}", headers=auth_headers, json={"text": "sooooo idk"})
     assert response.status_code == 200
     assert response.json()["text"] == "sooooo idk"
 
 
 async def test_update_reply_no_token(client):
-    response = await client.patch("/section/update/445", json={"text": "sooooo idk"})
+    response = await client.patch("/section/update/reply/445", json={"text": "sooooo idk"})
     assert response.status_code == 401
 
 
 async def test_update_nonex_reply(client, auth_headers):
-    response = await client.patch("/section/update/4475", headers=auth_headers, json={"text": "sooooo idk"})
+    response = await client.patch("/section/update/reply/4475", headers=auth_headers, json={"text": "sooooo idk"})
     assert response.status_code == 404
 
 async def test_update_someones_reply(client, auth_headers):
@@ -192,5 +192,5 @@ async def test_update_someones_reply(client, auth_headers):
     gabi_token = login_response.json()["access_token"]
     gabi_headers = {"Authorization": f"Bearer {gabi_token}"}
     
-    response = await client.patch(f"/section/update/{reply_id}", headers=gabi_headers, json={"text": "sooooo idk"} )
+    response = await client.patch(f"/section/update/reply/{reply_id}", headers=gabi_headers, json={"text": "sooooo idk"} )
     assert response.status_code == 403
