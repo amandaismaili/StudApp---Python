@@ -168,3 +168,25 @@ async def update_account(user_id: int, current_user: currentUser, user_update: U
     await db.refresh(result)
     
     return result
+
+@router.get("/filter/users", response_model=list[UserPublic])
+async def filter_users(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    university: str | None = None,
+    degree: str | None = None,
+    level: str | None = None,
+    year: int | None = None
+):
+    query = select(models.User)
+
+    if university:
+        query = query.where(models.User.university.ilike(f"%{university}%"))
+    if degree:
+        query = query.where(models.User.degree.ilike(f"%{degree}%"))
+    if level:
+        query = query.where(models.User.level.ilike(f"%{level}%"))
+    if year is not None:
+        query = query.where(models.User.year == year)
+
+    results = await db.execute(query)
+    return results.scalars().all()

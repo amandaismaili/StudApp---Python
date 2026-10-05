@@ -140,8 +140,8 @@ async def update_reply(reply_id: int, current_user: currentUser, reply_data: Rep
     return result
 
 
-@router.get("/filter", response_model=list[QuestionResponse])
-async def filter(
+@router.get("/filter/questions", response_model=list[QuestionResponse])
+async def filter_questions(
     db: Annotated[AsyncSession, Depends(get_db)],
     university: str | None = None,
     degree: str | None = None,
@@ -156,7 +156,7 @@ async def filter(
     if level:
         query = query.where(models.Users.level.ilike(f"%{level}%"))
     if year is not None:
-        query = query.where(models.Users.level.ilike(f"%{year}%"))
+        query = query.where(models.Users.year == year)
 
     result = await db.execute(query)
     return result.scalars().all()
