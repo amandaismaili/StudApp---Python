@@ -150,13 +150,13 @@ async def filter_questions(
 ):
     query = select(models.Question).join(models.User).options(selectinload(models.Question.author))
     if university:
-        query = query.where(models.Users.university.ilike(f"%{university}%)"))
+        query = query.where(models.User.university.ilike(f"%{university}%"))
     if degree:
-        query = query.where(models.Users.university.ilike(f"%{degree}%"))
+        query = query.where(models.User.degree.ilike(f"%{degree}%"))
     if level:
-        query = query.where(models.Users.level.ilike(f"%{level}%"))
+        query = query.where(models.User.level.ilike(f"%{level}%"))
     if year is not None:
-        query = query.where(models.Users.year == year)
+        query = query.where(models.User.year == year)
 
     result = await db.execute(query)
     return result.scalars().all()
