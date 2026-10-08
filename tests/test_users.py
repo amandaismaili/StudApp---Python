@@ -93,3 +93,21 @@ async def test_delete_account(client, auth_headers):
 async def test_delete_no_token(client):
     response = await client.delete("/user/delete/", params={"user_id": 1})
     assert response.status_code == 401
+
+
+async def test_filter_users_degree(client):
+    await client.post("/user/register", json={"username": "gabrielahwfh",
+                        "email": "gabrielajsjs@gmail.com", "name": "gabi", "surname": "jsjs",
+                        "university": "sinclarr", "degree": "nursing", "level": "2", "year": "1", "password": "myPass@6767"})
+
+    await client.post("/user/register", json={"username": "tinamaarn",
+                            "email": "tinamaarn@gmail.com", "name": "tina", "surname": "marn",
+                            "university": "hohohoho", "degree": "nursing", "level": "2", "year": "2", "password": "myPass@6767"})
+
+    response = await client.get("/user/filter/users", params={"degree": "nursing"})
+    usernames = {u["username"] for u in response.json()}
+    
+    assert "gabrielahwfh" in usernames
+    assert "tinamaarn" in usernames
+    assert response.status_code == 200
+    assert len(response.json()) >= 2
