@@ -175,6 +175,7 @@ async def test_update_nonex_reply(client, auth_headers):
     response = await client.patch("/section/update/reply/4475", headers=auth_headers, json={"text": "sooooo idk"})
     assert response.status_code == 404
 
+
 async def test_update_someones_reply(client, auth_headers):
     ques_response = await client.post("/section/questions", json={"title": "y i have oo", "text": "rjfcurivrf87uhnvdc"}, headers=auth_headers)
     ques_id = ques_response.json()["id"]
@@ -194,3 +195,12 @@ async def test_update_someones_reply(client, auth_headers):
     
     response = await client.patch(f"/section/update/reply/{reply_id}", headers=gabi_headers, json={"text": "sooooo idk"} )
     assert response.status_code == 403
+
+
+async def test_filter_questions_uni(client, auth_headers):
+    await client.post("/section/questions", json={"title": "hey there qqq", "text": "ugh so many questions"}, headers = auth_headers)
+    
+    response = await client.get("/section/filter/questions", params={"university": "sinclarr"})
+    assert response.status_code == 200
+    assert len(response.json()) >= 1
+    assert response.json()[0]["author"]["university"] == "sinclarr"
