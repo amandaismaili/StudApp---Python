@@ -97,6 +97,6 @@ Full interactive docs at `/docs` once running.
 - [ ] Frontend (planned once in progress on The Odin Project's API/fetch module)
 - [ ] Deployment
 
-## License
+## Licence
 
-MIT — see [LICENSE](LICENSE)
+MIT — see [LICENCE](LICENCE)
