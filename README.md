@@ -1,4 +1,5 @@
 # StudApp
+**Live demo:** https://studapp-python.onrender.com/docs
 
 A backend platform for university students to connect by university, degree, level, and year — ask questions, reply, and find classmates in the same program. Built with FastAPI and PostgreSQL.
 
@@ -94,8 +95,8 @@ Full interactive docs at `/docs` once running.
 
 - [x] Backend: auth, CRUD, filtering, ownership enforcement
 - [x] 34 passing tests
+- [x] Deployment
 - [ ] Frontend (planned once in progress on The Odin Project's API/fetch module)
-- [ ] Deployment
 
 ## License
 
