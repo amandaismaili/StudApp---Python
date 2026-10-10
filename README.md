@@ -99,4 +99,4 @@ Full interactive docs at `/docs` once running.
 
 ## License
 
-[your choice, e.g. MIT]
+MIT — see [LICENSE](LICENSE)
