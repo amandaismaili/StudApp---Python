@@ -33,20 +33,20 @@
 
 <body class="d-flex flex-column min-vh-100">
     <header class = "site-header">
-        <nav class="navbar navbar-expand-mb bg-steek fixed top" data-bs-theme="dark">
+        <nav class="navbar navbar-expand-md bg-steek sticky-top" data-bs-theme="dark">
             <div class = "container">
                 <a class="navbar-brand me-4" href="{{ url_for('home') }}">StudApp</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle"
-                        aria-controls = "narvbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                        aria-controls = "navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                     <span class = "navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
-                    <div class="narvbar-nav me-auto">
+                    <div class="navbar-nav me-auto">
                         <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
                     </div>
                     <div class="navbar-nav">
-                        <a class="btn btn-outline-light mb-2 mb-mb-0 mb-mb-2" href="#">Login</a>
-                        <a class="btn btn-light mb-2 mb-mb-0 mb-mb-3" href="#">Register</a>
+                        <a class="btn btn-outline-light mb-2 mb-mb-0" href="#">Login</a>
+                        <a class="btn btn-light mb-2 mb-mb-0" href="#">Register</a>
                         <div class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" id="bd-theme"
                                data-bs-toggle="dropdown" aria-expanded="false">
