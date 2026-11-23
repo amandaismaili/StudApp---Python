@@ -13,12 +13,7 @@
     <meta name = "author" content = "Amanda Ismaili">
 
     <meta property="og:title" content = "StudApp">
-    <meta property="og:type" content = "website">
-    <meta property = "og:image" content ="">
-    <meta property="og:url" content = "">
-
-    <link rel="preconnect" href= "https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <meta property="og:type" content = "website">  
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -27,13 +22,13 @@
 
     <link rel = "stylesheet" type = "text/css" href="{{ url_for('static', path='main.css') }}">
     
-    <meta name="theme-color" content="#6a89a7">
+    <meta name="theme-color" content="#c94c4c">
 
 </head>
 
 <body class="d-flex flex-column min-vh-100"> 
     <header class = "site-header">
-        <nav class="navbar navbar-expand-md bg-steek sticky-top" data-bs-theme="dark">
+        <nav class="navbar navbar-expand-md bg-brand sticky-top" data-bs-theme="dark">
             <div class = "container">
                 <a class="navbar-brand me-4" href="{{ url_for('home') }}">StudApp</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle"
@@ -45,8 +40,8 @@
                         <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
                     </div>
                     <div class="navbar-nav">
-                        <a class="btn btn-outline-light mb-2 mb-mb-0" href="#">Login</a>
-                        <a class="btn btn-light mb-2 mb-mb-0" href="#">Register</a>
+                        <a class="btn btn-outline-light mb-2 mb-md-0" href="#">Login</a>
+                        <a class="btn btn-light mb-2 mb-md-0" href="#">Register</a>
                         <div class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" id="bd-theme"
                                data-bs-toggle="dropdown" aria-expanded="false">
