@@ -19,7 +19,7 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
 templates = Jinja2Templates(directory="frontend")
 
 #routers
