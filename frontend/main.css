@@ -1,0 +1,28 @@
+:root,
+[data-bs-theme="light"] {
+    --brand: #c94c4c;
+    --card-bg: #fdeaea;
+    --card-border: #f3c6c6;
+    --bs-body-bg: #fff8f8;
+    --bs-link-color: #c94c4c;
+    --bs-link-hover-color: #a63a3a;
+}
+
+[data-bs-theme="dark"] {
+    --brand: #e0707a;
+    --card-bg: #2d1c1c;
+    --card-border: #4a2f2f;
+    --bs-body-bg: #1f1414;
+    --bs-link-color: #e0707a;
+    --bs-link-hover-color: #f09aa2;
+}
+
+.bg-brand {
+    background-color: var(--brand);
+}
+
+.content-section {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 0.5rem;
+}
