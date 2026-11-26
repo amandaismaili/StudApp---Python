@@ -15,7 +15,9 @@ router = APIRouter()
 
 @router.get("", response_model=list[QuestionResponse])
 async def get_section(db: Annotated[AsyncSession, Depends(get_db)]):
-    res = await db.execute(select(models.Question).options(selectinload(models.Question.author), selectinload(models.Question.replies)))
+    res = await db.execute(select(models.Question).options(
+        selectinload(models.Question.author), 
+        selectinload(models.Question.replies).selectinload(models.Reply.author)))
     data = res.scalars().all()
     return data
 
@@ -30,7 +32,7 @@ async def make_question(ques: QuestionCreate, current_user: currentUser, db: Ann
 
     db.add(question)
     await db.commit()
-    await db.refresh(question, attribute_names=["author"])
+    await db.refresh(question, attribute_names=["author", "replies"])
     return question
 
 
@@ -55,7 +57,9 @@ async def reply_to_ques(question_id: int, reply_body: ReplyCreate, current_user:
 
 @router.get("/search/{question_id}", response_model=QuestionResponse)
 async def search(question_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
-    result = await db.execute(select(models.Question).where(models.Question.id == question_id).options(selectinload(models.Question.author)))
+    result = await db.execute(select(models.Question).where(models.Question.id == question_id).options(
+        selectinload(models.Question.author),
+        selectinload(models.Question.replies).selectinload(models.Reply.author)))
     question = result.scalars().first()
 
     if not question:
@@ -100,7 +104,9 @@ async def delete_reply(reply_id: int, current_user: currentUser, db: Annotated[A
 
 @router.patch("/update/question/{question_id}", response_model=QuestionResponse)
 async def update_question(question_id: int, current_user: currentUser, ques_data: QuestionUpdate, db: Annotated[AsyncSession, Depends(get_db)]):
-    res = await db.execute(select(models.Question).where(models.Question.id == question_id).options(selectinload(models.Question.author)))
+    res = await db.execute(select(models.Question).where(models.Question.id == question_id).options(
+        selectinload(models.Question.author),
+        selectinload(models.Question.replies).selectinload(models.Reply.author)))
     result = res.scalars().first()
     
     if not result:
@@ -114,8 +120,7 @@ async def update_question(question_id: int, current_user: currentUser, ques_data
         setattr(result, field, value)
 
     await db.commit()
-    await db.refresh(result, attribute_names=["author"])
-
+    await db.refresh(result, attribute_names=["author", "replies"])
     return result
 
 
@@ -148,7 +153,9 @@ async def filter_questions(
     level: str | None = None,
     year: int | None = None
 ):
-    query = select(models.Question).join(models.User).options(selectinload(models.Question.author))
+    query = select(models.Question).join(models.User).options(
+        selectinload(models.Question.author),
+        selectinload(models.Question.replies).selectinload(models.Reply.author))
     if university:
         query = query.where(models.User.university.ilike(f"%{university}%"))
     if degree:
