@@ -204,3 +204,14 @@ async def test_filter_questions_uni(client, auth_headers):
     assert response.status_code == 200
     assert len(response.json()) >= 1
     assert response.json()[0]["author"]["university"] == "sinclarr"
+
+
+async def test_get_section_includes_replies(client, auth_headers):
+    q = await client.post("/section/questions", json={"title": "a title for a question", "text": "body text"}, headers=auth_headers)
+    qid = q.json()["id"]
+    await client.post(f"/section/{qid}/reply", json={"text": "my reply"}, headers=auth_headers)
+
+    response = await client.get("/section")
+    assert response.status_code == 200
+    assert response.json()[0]["replies"][0]["text"] == "my reply"
+    assert response.json()[0]["replies"][0]["author"]["username"] == "mariamissnf"
