@@ -57,13 +57,6 @@ class QuestionCreate(QuestionBase):
     pass
 
 
-class QuestionResponse(QuestionBase):
-    model_config = ConfigDict(from_attributes=True)
-    id: int
-    user_id: int
-    date_posted: datetime
-    author: UserPublic
-
 
 class QuestionUpdate(BaseModel):
     title: str | None = Field(default=None, min_length=1, max_length=100)
@@ -92,4 +85,13 @@ class ReplyUpdate(BaseModel):
 #schema for login
 class Token(BaseModel):
     access_token: str
-    token_type: str 
+    token_type: str
+    
+    
+class QuestionResponse(QuestionBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    user_id: int
+    date_posted: datetime
+    author: UserPublic
+    replies: list[ReplyResponse] = []
